@@ -1,0 +1,288 @@
+1️⃣ Conformed Dimension
+
+What
+A conformed dimension is a shared dimension that is used consistently across multiple fact tables and data marts.
+
+Why
+
+Ensures consistent reporting
+Enables cross-functional analysis
+Avoids duplicate dimensions
+
+Where Used
+
+Across:
+Multiple fact tables
+Enterprise Data Warehouses
+
+Healthcare Example
+
+Dim_Date, Dim_Patient, Dim_Provider
+
+Used by:
+Fact_Encounters
+Fact_Claims
+Fact_Lab_Results
+
+Same Patient_SK means the same patient everywhere.
+
+Scenario
+
+In our healthcare EDW, I worked with conformed Patient and Date dimensions so clinical, financial, and operational reports all aligned on the same patient definitions.
+-------------------------
+2️⃣ Role-Playing Dimension
+What
+
+A role-playing dimension is a single physical dimension that plays multiple roles in a fact table.
+
+Why
+Avoids duplicate dimensions
+Simplifies maintenance
+
+Where Used
+When the same dimension applies in multiple contexts.
+
+Healthcare Example
+
+Dim_Date used as:
+
+Admission Date
+Discharge Date
+Billing Date
+
+Scenario
+
+I used the Date dimension as a role-playing dimension in Fact_Encounter to analyze length of stay and billing timelines.
+--------------------
+3️⃣ Degenerated Dimension
+What
+
+A degenerated dimension is a dimension attribute stored directly in the fact table, without a separate dimension table.
+
+Why
+No additional descriptive attributes
+Improves performance
+Simplifies design
+
+Where Used
+Transactional identifiers.
+
+Healthcare Example
+Claim Number
+Encounter Number
+Invoice Number
+
+Scenario
+
+In Fact_Claims, the Claim_Number was stored as a degenerated dimension because it had no descriptive attributes.
+-----------------------------
+4️⃣ Junk Dimension
+What
+
+A junk dimension groups low-cardinality, unrelated flags and indicators into a single dimension table.
+
+Why
+Avoids many tiny dimensions
+Cleaner schema
+Better performance
+
+Where Used
+Flags like Yes/No, status indicators.
+
+Healthcare Example
+
+Dim_Visit_Flags
+Emergency Visit (Y/N)
+Readmission (Y/N)
+Telehealth (Y/N)
+
+Scenario
+
+I created a junk dimension table to store multiple visit flags instead of adding many columns to the fact table.
+-----------------------------------
+5️⃣ Slowly Changing Dimensions (SCD)
+
+Tracks changes in dimension attributes over time.
+
+SCD Type 0 – Retain Original
+
+What:
+No changes allowed.
+
+Healthcare Example:
+Patient Date of Birth
+
+SCD Type 1 – Overwrite
+
+What:
+Old value is replaced; no history.
+
+Healthcare Example:
+Fixing spelling errors in patient name
+
+SCD Type 2 – Full History
+
+What:
+New row created for every change.
+
+Columns:
+Effective_Date, Expiry_Date, Current_Flag
+
+Healthcare Example:
+Patient address, insurance plan
+
+SCD Type 3 – Limited History
+
+What:
+Stores current and previous value.
+
+Healthcare Example:
+Previous and current provider department
+
+SCD Type 4 – History Table
+
+What:
+Current data in main table, history in separate table.
+
+Healthcare Example:
+A provider can change specialization over time (e.g., General Medicine → Cardiology).
+
+SCD Type 6 – Hybrid (1 + 2 + 3)
+
+What:
+Combination of overwrite + history + previous value.
+
+Healthcare Example:
+Patient address tracked historically with current and previous values available
+---------------------------------------
+✅ Slowly Changing Dimension (SCD) Type 3 — Explained Simply (with Example)
+
+SCD Type 3 is used when you want to keep limited history, usually only the previous value, not full historical tracking.
+
+📌 What does SCD Type 3 store?
+
+Current value
+
+Previous value
+
+No unlimited history (only one level of history)
+
+🏢 Business Example (Very Common)
+Scenario: Employee Department Change
+
+HR wants to know:
+
+Current department of an employee
+
+Previous department (only the last one)
+
+They do NOT want full department change history.
+
+🧱 Dimension Table Structure (SCD Type 3)
+dim_employee
+------------
+emp_id
+emp_name
+current_dept
+previous_dept
+
+📊 Example Data
+Before Change
+emp_id	emp_name	current_dept	previous_dept
+101	John	IT	NULL
+Employee Moves from IT → HR
+After Update (Type 3)
+emp_id	emp_name	current_dept	previous_dept
+101	John	HR	IT
+
+👉 Only one previous value is stored.
+---------------------------------------
+Advanced Facts
+
+1️⃣ Additive Facts
+What
+
+Additive facts are measures that can be summed across all dimensions (time, location, product, patient, etc.) without losing meaning.
+
+Why
+Simplest and most common type of facts
+Easy aggregation and reporting
+
+Where Used
+Transaction fact tables
+Snapshot fact tables
+
+Examples
+Number of Orders
+Website Traffic (Visits)
+Employee Hours Worked
+
+Healthcare Example
+Number of patient visits
+Total claim amount
+Total hours worked by nurses
+
+Scenario
+
+In our healthcare DW, we summed total patient visits and billing amounts across date, facility, and department to generate monthly operational and financial reports.
+
+Memory Tip
+
+If you can SUM it across everything, it’s additive.
+
+2️⃣ Semi-Additive Facts
+What
+
+Semi-additive facts can be summed across some dimensions, but not across time (usually).
+
+Why
+
+Represents point-in-time values
+Time aggregation can distort meaning
+
+Where Used
+Periodic snapshot fact tables
+
+Examples
+Inventory Levels
+Patient Bed Occupancy
+Number of employees on a specific day
+
+Healthcare Example
+Beds occupied per day
+Patients in ICU at midnight
+
+Scenario
+
+We used patient bed occupancy as a semi-additive fact—summed across departments and facilities, but not across dates, to avoid overstating hospital capacity.
+
+Memory Tip
+
+Add it across space, not across time.
+
+3️⃣ Non-Additive Facts
+What
+
+Non-additive facts cannot be summed across any dimension because doing so produces incorrect results.
+
+Why
+Represents ratios, percentages, or calculated values
+Requires recalculation, not summation
+
+Where Used
+Fact tables with derived metrics
+BI layer calculations
+
+Examples
+Average values
+Percentages
+Geographic coordinates
+
+Healthcare Example
+Average length of stay
+Readmission rate (%)
+Patient satisfaction score (%)
+
+Scenario
+
+In healthcare quality dashboards, metrics like readmission rate and average length of stay were calculated dynamically instead of being summed, ensuring accurate reporting at different aggregation levels.
