@@ -1,0 +1,37 @@
+Dimension Modeling:
+
+Dimension modeling in a data warehouse helps organize data so it's easy and quick to analyze, similar to how a library organizes books for fast access. 
+
+It uses two main types of tables:
+
+Dimension tables: These give details about the data, like "Customer," "Product," and "Time," which help explain the numbers.
+
+Fact tables: These hold the actual data, like "how many products were sold" or "how much money was made."
+
+The purpose is to make it easier for users to ask questions and get answers quickly, like finding out how much money a product made last month. A well-organized model makes reports faster, helps businesses make decisions quickly, and keeps the system flexible as more data is added.
+----------------------
+Steps involved in Dimension Modeling:
+
+1. Understand Business Requirements
+
+The first step is to understand the business goals, reporting needs, and KPIs. This ensures the data model supports meaningful analysis and provides insights that help stakeholders make informed decisions.
+
+2. Identify the Business Process
+
+Next, identify the core business process to be analyzed, such as patient encounters, claims processing, or sales transactions. Clearly defining the process ensures the model captures the correct events and metrics.
+
+3. Define Granularity (Grain)
+
+Granularity defines the level of detail stored in the fact table (for example, one row per patient visit per day). Choosing the right grain is critical to support required analysis while maintaining performance and data accuracy.
+
+4. Define the Fact Table
+
+The fact table is designed to store measurable, numeric data related to the business process, such as charges, visit counts, or revenue. Each row represents a single occurrence at the defined grain.
+
+5. Define the Dimension Tables
+
+Dimension tables store descriptive attributes that provide context to the facts, such as patient, provider, date, or facility details. These tables enable filtering, grouping, and meaningful interpretation of the fact data.
+
+6. Design the Schema
+
+Finally, design the schema that defines how fact and dimension tables relate to each other. Common approaches include star schema for simplicity and performance, or snowflake schema for normalized dimensions.
