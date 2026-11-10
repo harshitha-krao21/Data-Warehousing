@@ -1,0 +1,145 @@
+nmon methodology):
+
+
+His approach is suitable for especially large enterprises with complex data environments that can afford the time takes and other expenses to develop the data warehouse, follows a top-down approach
+ This approach is complex because this is based on normalized architecture, which makes data querying a challenging part.
+---------------------------------------------------------------------------------------------------------------------
+
+There are some key point:
+
+
+Top-Down Design.
+Enterprise Data Warehouse (EDW).
+Data Integration.
+Subject-Oriented Design.
+Time-Variant Data.
+Normalized Data Structure.
+Data Marts.
+Scalability and Flexibility.
+---------------------------------------------------------------------------------------------------------------------
+
+Advantage:
+Centralized and Integrated Data Model.
+Normalized Structure.
+Flexibility for Reporting and Analytics.
+Scalability.
+Consistency in Data Definition.
+Reduced Data Redundancy.
+---------------------------------------------------------------------------------------------------------------------
+
+Disadvantages:
+Complexity and High Initial Cost.
+Slower Time-to-Value.
+Performance Issues.
+Lack of Immediate Reporting.
+Steep Learning Curve for Business Users.
+Data Marts Still Required
+ ---------------------------------------------------------------------------------------------------------------------
+
+When to use Inmon: -
+ 
+
+You are working with large, complex data sources across the organization.
+  You have the budget and resources for a complex and time-consuming implementation process.
+You need a long-term, scalable, and enterprise-wide data strategy.
+---------------------------------------------------------------------------------------------------------------------
+
+When not to use Inmon: -
+
+
+Small to Medium-Sized Organizations
+Quick Reporting Needs.
+---------------------------------------------------------------------------------------------------------------------
+
+Example: -
+
+
+Banking and Financial Institutions (JPMorgan Chase, Bank of America).
+  Retail Giants (Walmart, Amazon).
+ Health Insurance Companies (UnitedHealth Group or Anthem) etc.
+
+
+2.Ralph Kimball approach- (Kimball methodology)
+
+
+It is suitable for large businesses which have many departments.
+This approach is better for organizations that prioritize fast implementation.
+It follows the bottom-up approach where several DataMart's are created and afterword, we can network together to make a whole Datawarehouse.
+---------------------------------------------------------------------------------------------------------------------
+
+  It has some key points like
+
+
+Dimensional Modeling.
+ETL (Extract, Transform, Load) Process.
+Business Focus.
+Iterative Development.
+Conformed Dimensions.
+Data Mart Approach.
+Star Schema vs. Snowflake Schema.
+---------------------------------------------------------------------------------------------------------------------
+
+ Advantage:
+   
+
+Simplicity and Accessibility.
+Quick Implementation.
+Business-Oriented Focus.
+Flexibility.
+Optimized for Reporting and Analysis
+ --------------------------------------------------------------------------------------------------------------------
+
+ Disadvantage:
+  
+
+Data Redundancy.
+Complexity for Very Large Data Volumes.
+Limited Support for Operational Data.
+Data Integration and Quality Challenges.
+Requires Dedicated Resources for Maintenance.
+Limited Focus on Data Modeling for Complex Scenarios.
+---------------------------------------------------------------------------------------------------------------------
+
+ When to use:
+
+
+When we need a fast-to-implement, user-friendly, and business-centric data warehouse.
+Works best in environments where the data is primarily analytical and where speed and business value are prioritized.
+---------------------------------------------------------------------------------------------------------------------
+
+  When not to be used:
+ 
+
+You need to support real-time operational data.
+You need advanced, highly complex modeling.
+Data storage and redundancy are a critical concern.
+You have highly varied or unstructured data
+---------------------------------------------------------------------------------------------------------------------
+
+ Example:
+Healthcare Organizations (Kaiser Permanente, Blue Cross Blue Shield)
+Telecommunications Companies (AT&T,Verizon), Technology and Software.
+ Companies (Microsoft,Google), Consumer Goods Companies (Procter & Gamble, Nestle)
+
+
+3. Multidimensional Schema:
+
+
+In data warehousing, a schema is essentially the plan or design that defines how data is arranged and stored in the warehouse. Think of it like a map or blueprint for organizing and managing data so that it’s easy to understand and access when needed.
+
+Here are some of the most common types of schemas used in data warehousing, explained in simple terms:
+
+---------------------------------------------------------------------------------------------------------------------
+
+1. Star schema: -
+It's a simple schema where the dimension table and fact table are connected via foreign key and surrogate key. It is in the denormalized form.
+
+
+2.Snowflake schema: -
+It is like the star schema, but the dimension table is normalized means it is breaked into the subset. It is complex as compared to star.
+
+
+3.Galaxy schema: -
+The dimension table and the fact table are in normalized form means the both the table has been breakdown to their respective subset. It is the most complex of them all.
+---------------------------------
+
