@@ -1,0 +1,166 @@
+Dimension Tables:
+
+A dimension table stores descriptive, contextual data that gives meaning to facts.
+It answers questions like Who, What, Where, When, and How about a business event.
+
+When
+
+Dimension tables are used whenever analytical reporting or OLAP analysis is required, especially in Data Warehouses and BI systems.
+
+Why
+
+Dimension tables are needed to:
+
+Make reports human-readable
+Enable filtering, grouping, and slicing
+Improve query performance
+Support historical tracking (Slowly Changing Dimensions)
+
+Where
+
+Dimension tables exist in:
+
+Data Warehouses
+Data Marts
+OLAP cubes
+They are joined to fact tables.
+
+How
+
+Designed with one primary key (surrogate key)
+Contain business attributes
+Change slowly over time
+Linked to fact tables using foreign keys
+
+Example
+
+Patient Dimension (Dim_Patient)
+
+Patient_SK	MRN	Patient_Name	Gender	DOB
+101	MRN123	John Doe	M	1985-04-10
+Healthcare Real-Life Scenario
+
+In our healthcare data warehouse, I worked on the Patient, Provider, Facility, and Date dimensions. These dimensions were linked to fact tables such as Fact_Encounters and Fact_Claims. Business users used the Patient and Provider dimensions to filter reports by age group, gender, specialty, or location, while historical changes like patient address updates were tracked using Slowly Changing Dimensions (Type 2) to ensure accurate reporting and compliance.
+---------------------------
+Fact Tables
+What
+
+A fact table stores measurable business events and numeric data that can be aggregated and analyzed.
+It answers questions like How many? How much? How often?
+
+When
+
+Fact tables are used whenever analytical reporting, KPIs, or trend analysis is required in a Data Warehouse.
+
+Why
+
+Fact tables are needed to:
+
+Store business metrics
+
+Enable aggregations (SUM, COUNT, AVG)
+
+Support performance analysis
+
+Act as the central table in analytical queries
+
+Where
+
+Fact tables exist in:
+
+Data Warehouses
+
+Data Marts
+
+OLAP systems
+They are connected to multiple dimension tables.
+
+How
+
+Contains foreign keys referencing dimension tables
+
+Stores numeric measures
+
+Usually contains millions or billions of rows
+
+Designed at a specific grain (level of detail)
+
+Example
+
+Fact_Encounter
+
+Patient_SK	Provider_SK	Facility_SK	Date_SK	Visit_Count	Visit_Cost
+101	201	301	20240115	1	1200
+Healthcare Real-Life Scenario
+
+In our healthcare data warehouse, I worked on Fact_Encounter and Fact_Claims tables at the encounter and claim-line grain. These fact tables captured metrics such as visit counts, charges, reimbursements, and length of stay. Business teams used these facts to analyze cost per patient, provider performance, readmission trends, and revenue metrics across time, facilities, and departments.
+--------------------------------------
+Factless Fact Tables
+What
+
+A factless fact table is a fact table that contains no numeric measures.
+It only stores foreign keys to dimension tables to record that an event occurred or a condition exists.
+
+Why
+
+Factless fact tables are used to:
+
+Track events without numbers
+Capture relationships
+Enable count-based analysis
+Answer “Did it happen?” questions
+
+When
+Used when:
+There are no measurable values
+Only presence or absence of an event matters
+Business wants counts or trend analysis
+
+Where
+
+Found in:
+Data Warehouses
+Dimensional models
+Star schemas
+
+How
+
+Contains only dimension foreign keys
+Often includes a Date dimension
+Analysis is done using COUNT(*)
+
+Types of Factless Fact Tables
+
+1)Event Tracking Factless Table
+Tracks when an event happened.
+
+Healthcare Example
+
+Fact_Patient_Appointment
+
+Patient_SK	Provider_SK	Date_SK
+101	201	20240115
+
+Use case:
+
+Count appointments per day
+No-show analysis
+Provider workload
+
+2)Coverage / Eligibility Factless Table
+
+Tracks conditions over a period.
+Healthcare Example
+
+Fact_Insurance_Eligibility
+
+Patient_SK	Insurance_SK	Date_SK
+101	401	20240101
+
+Use case:
+Which patients were insured on a given date
+Eligibility reporting
+
+Healthcare Real-Life Scenario
+
+In our healthcare data warehouse, I worked with factless fact tables to track patient appointments and insurance eligibility. These tables did not store costs or amounts, but allowed the business to count visits, identify missed appointments, analyze provider schedules, and verify patient coverage for compliance and operational reporting.
