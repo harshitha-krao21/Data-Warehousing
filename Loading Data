@@ -1,0 +1,213 @@
+ETL
+Why ?
+Pre-Stagging and Stagging area
+ETL Options, Pros and Cons
+Triggers
+Initial Load
+Incremental Load
+---------------------------------------------------------------------------------
+
+Q What is ETL?
+
+
+1. Extract
+This is the first step where we gather data from different places. These can be things like databases, files, or even online sources. Think of it like collecting all the ingredients you need for a recipe from different places without worrying about how they’re organized or cleaned up yet.
+
+
+
+2. Transform
+Once we have all the data, we need to clean it up and organize it. This means:
+
+Fixing any mistakes or missing pieces of data.
+Removing unnecessary information to make it easier to understand.
+Changing the format of the data to make sure it’s all consistent (like making sure all dates are in the same format or converting all prices into one currency).
+Combining data from different places to make it more useful.
+This step is like preparing the ingredients for cooking—cutting, washing, or sorting everything so it’s ready to use.
+
+3. Load
+After the data is cleaned and organized, it’s put into a system where people can easily access it for analysis. This could be a database or a data warehouse, kind of like putting your organized ingredients in the pantry or fridge, ready for when you need them.
+
+------------------------------------------------------------------------------------------------------------------
+
+Why is ETL Important?
+In the real world, companies collect lots of data from different sources, and it can be messy and hard to use. ETL helps by making that data clean, organized, and easy to analyze. Once it’s ready, businesses can use the data to make better decisions, track progress, or find new opportunities.
+
+In simple terms, ETL is like preparing ingredients for a meal: gathering them (Extract), cleaning and organizing them (Transform), and then storing them in a way that’s easy to use later (Load). This process helps turn raw data into something useful for making decisions.
+
+
+
+
+
+
+
+Q What is Pre-Stagging and Stagging area?
+
+
+Pre-Stagging:
+Pre-staging is an initial step where data undergoes basic checks to ensure it's in the right format before reaching the staging area. It's not as detailed as staging but helps keep things running smoothly by ensuring the data is clean enough for further processing. Pre-staging is optional, typically used in larger systems.
+
+------------------------------------------------------------------------------------------------------------------
+
+Stagging:
+The staging area is a temporary space where raw, unprocessed data is held before being cleaned and transformed. It helps organize and control data before it moves to its final destination, like a data warehouse, for analysis.
+--------------
+ETL Option:
+
+
+1.Checksum: 
+
+
+Checksum is an initial and incremental loading technique which generates a Hash value which is of 4-byte number generated when an update or insert in the data table happens. In order to employee this technique your source table must have this function implemented on one of the columns that would generate the hash code. 
+
+------------------------------------------------------------------------------------------------------------------
+
+Features of Checksum: 
+
+
+Checksum is a system function
+It cannot differentiate between upper case and lower-case values.
+It is not able to generate hash values for NULL values.
+It gives different values if the order of the data is changed even if the data is exactly the same.
+The syntax of Checksum: Checksum (Expression) or Checksum (*)
+Checksum supports all the datatypes except text, ntext, image, XML, etc.
+------------------------------------------------------------------------------------------------------------------
+
+Pro and Cons
+
+
+Pro: 
+Fast and easy to implement.
+Good for Small to Medium Databases
+
+
+Cons: 
+Can Have Collisions.
+Doesn’t Handle Some Data Types.
+No Case Sensitivity.
+Sensitive to Data Order.
+-----------
+2.Change Data Capture (CDC)
+
+
+CDC is a feature in SQL Server that helps us to track the source table for the occurrence of any DML operation.
+Whenever we are performing DML operation on the source table it will record those changes in a table called the change table.
+In the change table we have LSN (Log Sequence Number), we have transaction start and end time that helps us to identify the time period for a particular record when it is being inserted, updated or deleted.
+The Transaction log is physical file which by default has the .LDF extension.
+------------------------------------------------------------------------------------------------------------------
+
+CDC can be configured as follows:
+Enable SQL Server Job Agent. 
+Enable the CDC on the database containing the source table.
+Enable the CDC on the table containing the source data. table level. 
+
+
+The operation column of the change table defines DML operation in the form of the following numbers: 
+
+1 represents delete
+2 represents insert 
+3 represents values before update 
+4 represents values after update
+------------------------------------------------------------------------------------------------------------------
+
+CDC Processing Modes: 
+
+
+All: Returns the changes in the current CDC range without the Before-Update values.
+All with old values: Returns the changes in the CDC processing range including the old values. (Before the update).
+Net: Returns only change row per source row modified in the current CDC processing range.
+Net with Update Mark: This mode is similar to the Net mode, but it also adds Boolean columns with the name pattern.
+Net with Merge: This option is similar to the regular Net mode but with insert and update operations merge into a single merge operation.
+
+
+3.MD2 and MD5:
+
+
+Introduction:
+They are the encryption tool MD stand for Message Digest are both cryptographic hash functions, but they are no longer considered secure for encryption purposes. But let take a look on both of them one by one.
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+MD#2:
+MD2 is a type of cryptographic hash function that was introduced by Ronald Rivest in 1989. Its main job is to take an input (like a file or message) and turn it into a 128-bit (16-byte) hash value, which is a unique identifier for that input. Think of it like a digital fingerprint for data.
+
+However, over time, MD2 was found to have some serious weaknesses. Specifically, it's vulnerable to something called "collision attacks." This means that it's possible for two different pieces of data to produce the same hash value, which is a problem if you need to trust that the hash is unique and hasn't been tampered with.
+
+Because of these vulnerabilities, MD2 is now considered insecure. It was once used in cryptographic systems for things like checking if files had been altered or verifying digital signatures. But today, we don’t use MD2 for secure purposes anymore because there are more reliable, safer hashing algorithms available.
+
+------------------------------------------------------------------------------------------------------------------
+
+MD#5:
+MD5 is a method introduced in 1991 by Ronald Rivest that turns data into a 128-bit hash (a unique code) to check if the data has been altered. It's similar to MD2, but MD5 became very popular for tasks like verifying file integrity and creating digital signatures.
+
+However, over time, MD5 was found to be insecure. It’s vulnerable to attacks where attackers can find different data that gives the same hash (called a collision) or even figure out the original data from the hash (called a preimage attack). Because of these weaknesses, MD5 is no longer safe for cryptographic security.
+
+Although MD5 is still used in non-secure situations (like checksums to verify file downloads), it's been replaced in secure systems by stronger hash methods, like SHA-256 and SHA-3, which are much safer to use.
+
+
+
+------------------------------------------------------------------------------------------------------------------
+
+
+4.Time stamp
+
+
+Introduction:
+Timestamp is an incremental and initial loading technique that makes use of a datatype which is called as Timestamp. This datatype generates a unique binary number for each and every record in a table.
+Whenever a record is inserted or updated a unique binary number is generated.
+This binary number uses 8 bytes of storage space.
+To recognize a Timestamp value a dataset must be having a datatype called Varbinary that is used to recognize the timestamp value.
+Timestamp does not have any association with Date and Time.
+To implement the incremental load and initial load with timestamp, we have to create a stored procedure.
+------------------------------------------------------------------------------------------------------------------
+
+
+
+Pros :
+Fast and Efficient.
+No Duplicates.
+Scales Well.
+
+
+------------------------------------------------------------------------------------------------------------------
+
+
+
+Cons: 
+Complex Setup.
+No Date/Time Info.
+Doesn’t Track Deletions.
+Database-Specific.
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+5.Joins & Triggers:
+So, we can use Join and Trigger to perform ETL, but both are used for the different purposes. Let take a look on both of the techniques one by one.
+
+
+
+Joins:
+In the Transform phase of the ETL (Extract, Transform, Load) process, a join is used to combine data from two or more tables into one unified result. This is done by matching columns that have related or common values. Essentially, joins help merge different pieces of information based on how they are logically connected, making it easier to work with and analyze the data. 
+
+------------------------------------------------------------------------------------------------------------------
+
+Triggers:
+A trigger is like an automatic system that performs certain actions or starts an ETL process when specific conditions or events happen. In databases, triggers are often set up to run certain tasks, like stored procedures or functions, whenever something important occurs, such as changes in the data. In the context of ETL, triggers can be used to initiate processes like data extraction or transformation as soon as certain conditions are met, making the process more efficient and timelier.
+
+Note: This method or technique is slower than other method that we have to preform ETL.
+
+Identifying the different loads:
+
+
+Initial Load:
+The initial load is the process of transferring all the data from one system to another for the first time. It's like moving everything from your old house into a new one when you’re just getting started. For example, if you're setting up a new data warehouse for an e-commerce site, the initial load would involve moving all the sales, customer, and product data from the old system into the new warehouse. This can take a lot of time and resources because you’re moving everything all at once. It’s often done when starting fresh with a new system or when switching from one system to another.
+
+------------------------------------------------------------------------------------------------------------------
+
+Incremental Load:
+An incremental load is the process of updating your system by only adding or changing the data that has been updated or created since the last time you did the transfer. Instead of moving all the data every time, you only move the new or modified pieces, which makes it faster and more efficient.
+
+For example, after the initial load of all your e-commerce data, an incremental load would only bring in the new sales orders or any updates to customer information that have occurred since the last update. This keeps your system up to date without having to reload everything. It’s typically done on a regular schedule, like daily or weekly. The challenge, though, is figuring out which data has changed, and that usually involves tracking methods like timestamps or specialized tools.
