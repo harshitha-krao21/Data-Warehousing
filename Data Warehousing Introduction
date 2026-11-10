@@ -1,0 +1,275 @@
+Data Warehouse (DW)
+
+What is a Data Warehouse?
+
+A Data Warehouse is a centralized, historical data storage system designed for reporting, analytics, and decision-making, not daily transactions.
+It collects and manages data from various sources.
+ Database tables, Excel sheets, XML files, Webpages, Videos, Image files, and Sensor data.
+
+Types of Datawarehouse Amazon Redshift (Netflix, Airbnb, and Spotify.), Microsoft Azure Synapse Analytics (LG Electronics, and Coca-Cola.), Teradata (McDonald's)
+
+Why do we need a Data Warehouse?
+
+A Data Warehouse is needed because OLTP systems like EHR, billing, and claims are built for transactions and become slow when used for analytics. Data is also spread across multiple systems, making unified reporting difficult. The business needs historical and trend analysis, not just current data, and a Data Warehouse enables this while protecting production systems(OLTP) from heavy reporting queries.
+
+When is it used?
+
+Monthly / quarterly / yearly reporting
+Dashboards
+Trend analysis
+Business Intelligence
+Regulatory & compliance reporting
+Executive decision-making
+
+Where is it used?
+
+Healthcare organizations
+Insurance companies
+Banks
+Retail
+Telecom
+Any data-driven enterprise
+
+How to create a DW ?
+
+Gather business req
+	|
+Gather Resources
+	|
+Choose the methodology(Inmon/Kimball)
+	|
+Kimball - Dimensional Modeling (Granularity->Fact(Keys)->Dim(Keys)->Data Marts leads to DW by connecting to Conformed Dim)	
+Inmon
+	|
+Data Dict and Data Mapping  Doc
+	|
+ETL(Prestaging, Staging, DW)
+	|
+Create BI Reports/ML Modeling
+
+Data comes from source systems (EHR, Claims, Pharmacy, Billing)
+
+ETL/ELT process:
+Extract
+Transform (clean, standardize)
+Load
+Data is stored in fact and dimension tables
+BI tools query the DW (Power BI, Tableau)
+
+Healthcare Real-Life Scenario (6 yrs experience)
+
+At my healthcare organization, we built an Enterprise Data Warehouse (EDW) that integrates data from Epic EHR, Claims system, Lab system, and Provider systems.
+I worked on loading patient visits, procedures, diagnoses, and billing data into fact tables, and designed dimensions like Patient, Provider, Facility, and Date.
+This allowed leadership to analyze readmission rates, length of stay, revenue trends, and quality metrics without impacting production systems.
+-----------------------------------
+
+OLAP (Online Analytical Processing)
+
+What is OLAP?
+
+OLAP is a technology and approach used to analyze data quickly across multiple dimensions.
+It supports complex analytical queries, not inserts/updates.
+
+Why OLAP?
+
+Fast aggregation (SUM, COUNT, AVG)
+Slice, Dice, Drill-down, Roll-up
+Business-friendly analysis
+
+When is OLAP used?
+
+Reporting
+Dashboards
+Ad-hoc analysis
+Trend comparison
+
+Where is OLAP used?
+
+On top of a Data Warehouse
+BI tools
+OLAP cubes (SSAS, Snowflake, BigQuery)
+
+How OLAP works?
+
+Data is organized in facts and dimensions, enabling:
+Drill down (Year → Month → Day)
+Slice (only Cardiology patients)
+  Dice (Cardiology + 2024 + Oregon)
+
+Healthcare Scenario
+
+We used OLAP to analyze patient visits by year, month, department, and provider.
+Executives could drill down from hospital-level metrics to individual physicians to identify performance and quality gaps.
+--------------------------
+Dimensions
+
+What is a Dimension?
+
+A dimension provides reference information that helps us to understand and analyze the facts
+It answers Who, What, Where, When, How.
+
+When did most patients visit the hospital? (Using the Time dimension).
+ Where are most patients coming from? (Using the Location dimension)
+Who are the patients with the highest rates of a certain illness? (Using the Patient dimension)
+How effective is a specific treatment? (Using the Treatment dimension)
+
+Why Dimensions?
+
+Make data readable and meaningful
+Enable filtering and grouping
+Improve query performance
+
+When used?
+
+Always used in OLAP and Data Warehouses.
+
+Where stored?
+
+In dimension tables.
+
+How they are designed?
+
+Usually descriptive attributes
+Relatively slow-changing
+Linked to fact tables via keys
+
+Example Dimensions (Healthcare)
+Dimension	Example Attributes
+Patient Dim	Patient Name, DOB, Gender
+Provider Dim	Doctor Name, Specialty
+Facility Dim	Hospital Name, Location
+Date Dim	Date, Month, Year
+
+Healthcare Scenario
+
+I designed a Patient Dimension that included demographic details and used Slowly Changing Dimensions (Type 2) to track changes like address or insurance updates over time.
+--------------------------
+Facts
+
+What is a Fact?
+
+A fact represents a measurable business event. after measuring we can take the decision based on that report. 
+It answers How many? How much?
+
+Why Facts?
+
+Store metrics used for analysis
+Central point for reporting
+
+When used?
+
+Whenever business wants numeric analysis.
+
+Where stored?
+In fact tables.
+
+How are they designed?
+
+Contains foreign keys to dimensions
+Contains measures
+Usually very large tables
+
+Example Fact Table (Healthcare)
+
+Fact_Patient_Visit
+
+Column	Description
+Patient_SK	FK
+Provider_SK	FK
+Date_SK	FK
+Visit_Count	1
+Visit_Cost	1200
+
+Healthcare Scenario
+
+I worked on Fact_Claims and Fact_Encounters, capturing visit counts, charges, reimbursements, and length of stay, which were later used to calculate KPIs like cost per patient and readmission rates.
+--------------------------
+Surrogate Key
+
+What is a Surrogate Key?
+
+A surrogate key is a system-generated key (usually integer) used in the Data Warehouse instead of business keys.
+
+Why Surrogate Keys?
+
+Source system keys change
+Faster joins
+Supports history (SCD Type 2)
+Decouples DW from source systems
+
+When used?
+
+Always in dimension tables.
+
+Where used?
+
+As primary key in dimension tables and foreign key in fact tables.
+
+How created?
+
+Auto-increment
+Sequence
+Identity column
+
+Example
+
+Patient Dimension
+
+Patient_SK	Patient_ID (Business Key)	Name
+101	 	MRN123				John
+102		MRN123				John (new address)
+
+Healthcare Scenario
+
+I implemented surrogate keys for Patient and Provider dimensions to track historical changes without losing old records, especially important for regulatory and audit reporting.
+--------------------------
+Business Key
+
+What is a Business Key?
+
+A business key is a unique identifier coming from the source system.
+
+Why Business Keys?
+
+Identify records in source systems
+Used for data integration
+Required during ETL to find matches
+
+When used?
+
+During ETL
+For deduplication
+Source-to-target mapping
+
+Where used?
+
+Stored in dimension tables
+Not recommended as fact table FK
+
+Example Business Keys (Healthcare)
+Entity	Business Key
+Patient	MRN
+Provider	NPI
+Claim	Claim Number
+
+Healthcare Scenario
+
+During ETL, I used MRN and NPI as business keys to identify patients and providers from multiple source systems, then generated surrogate keys to maintain consistency inside the warehouse.
+
+One-Line Memory Trick (Very Important)
+
+Business keys identify records in the real world; surrogate keys identify records inside the Data Warehouse.
+
+Facts measure events, dimensions describe them, OLAP analyzes them, and the Data Warehouse stores them all historically.
+-------------------------------
+Q What is archive dimension?
+
+An Archive Dimension is used in a Data Warehouse to store old or inactive dimension records that are no longer required for day-to-day analysis but must be kept for historical, audit, or compliance purposes. This helps reduce the size of active dimension tables and improves query performance.
+
+Healthcare Example
+
+In a healthcare data warehouse, consider a Provider Dimension that stores doctor details. Providers who retired or left the organization 10+ years ago are rarely needed for regular reporting. Instead of keeping them in the active Provider dimension, these records are moved to an Archive Dimension.
+
+We just transfer the data from the online mode to offline mode (in DVDs, Floppy disk, CD, Hard disk)
+----------------------------------
+
